@@ -20,7 +20,9 @@ if (!process.env.CLOUDINARY_CLOUD_NAME) {
 }
 
 export default {
-  mongoUri:            process.env.MONGODB_URI,
+  mongoUri: process.env.NODE_ENV === 'test'
+    ? (process.env.MONGODB_TEST_URI || process.env.MONGODB_URI)
+    : process.env.MONGODB_URI,
   groqApiKey:          process.env.GROQ_API_KEY,
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
   cloudinaryApiKey:    process.env.CLOUDINARY_API_KEY || '',

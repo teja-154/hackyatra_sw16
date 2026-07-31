@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Marker, Popup, LayersControl, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, LayerGroup, CircleMarker, Marker, Popup, LayersControl, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 const { BaseLayer } = LayersControl;
 import L from 'leaflet';
@@ -143,7 +143,6 @@ export default function Dashboard() {
   const visibleIncidents = incidents.filter(inc => {
     const isResolved = inc.status === 'resolved_verified' || inc.status === 'disputed';
     if (isResolved && !showResolved) return false;
-    if (!isResolved && showResolved) return false;
 
     if (sq) {
       return (
@@ -180,7 +179,7 @@ export default function Dashboard() {
 
       <div className="flex-1 grid grid-cols-12 gap-3 p-3 overflow-hidden">
         {/* LEFT: Alerts Feed OR Detail Panel */}
-        <div className="col-span-3 bg-coc-card rounded-xl border border-coc-border flex flex-col overflow-hidden">
+        <div className="col-span-3 bg-slate-900/60 backdrop-blur-xl rounded-xl border border-coc-border shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex flex-col overflow-hidden">
           {selectedIncident && detailData ? (
             /* ── DETAIL PANEL ── */
             <div className="flex flex-col h-full overflow-hidden">
@@ -236,7 +235,7 @@ export default function Dashboard() {
                 )}
 
                 {/* Evidence Images */}
-                {detailData.signals?.filter(s => s.photoUrl).length > 0 && (
+                {detailData.signals?.filter(s => s.photoUrl).length > 0 ? (
                   <div>
                     <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Evidence Photos</h4>
                     <div className="grid grid-cols-1 gap-3">
@@ -248,6 +247,14 @@ export default function Dashboard() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Evidence Photos</h4>
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 flex flex-col items-center justify-center text-slate-500">
+                      <Image className="w-8 h-8 mb-2 opacity-30" />
+                      <span className="text-xs font-medium">No Evidence Photos Present</span>
                     </div>
                   </div>
                 )}
@@ -344,12 +351,12 @@ export default function Dashboard() {
         {/* RIGHT: Stats + Map */}
         <div className="col-span-9 flex flex-col gap-3 overflow-hidden">
           <div className="grid grid-cols-4 gap-3 flex-shrink-0">
-            <div className="bg-coc-card p-3 rounded-xl border border-coc-border flex items-center gap-3">
+            <div className="bg-slate-900/60 backdrop-blur-xl p-3 rounded-xl border border-coc-border flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <div className="p-2.5 bg-red-500/10 rounded-lg text-red-500 border border-red-500/20"><AlertCircle className="w-5 h-5" /></div>
               <div><p className="text-xs text-slate-400">Open</p><p className="text-xl font-bold text-white">{stats.overall?.open || 0}</p></div>
             </div>
             <div 
-              className={`bg-coc-card p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-colors ${showResolved ? 'border-green-500 bg-green-500/10' : 'border-coc-border hover:border-green-500/50'}`}
+              className={`backdrop-blur-xl p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-colors shadow-[0_8px_30px_rgb(0,0,0,0.5)] ${showResolved ? 'border-green-500 bg-green-500/20' : 'bg-slate-900/60 border-coc-border hover:border-green-500/50'}`}
               onClick={() => {
                 setShowResolved(!showResolved);
                 setSelectedIncident(null);
@@ -358,28 +365,31 @@ export default function Dashboard() {
               <div className="p-2.5 bg-green-500/10 rounded-lg text-green-500 border border-green-500/20"><CheckCircle2 className="w-5 h-5" /></div>
               <div><p className="text-xs text-slate-400">{showResolved ? 'Showing Resolved' : 'View Resolved'}</p><p className="text-xl font-bold text-white">{stats.overall?.resolved || 0}</p></div>
             </div>
-            <div className="bg-coc-card p-3 rounded-xl border border-coc-border flex items-center gap-3">
+            <div className="bg-slate-900/60 backdrop-blur-xl p-3 rounded-xl border border-coc-border flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <div className="p-2.5 bg-orange-500/10 rounded-lg text-orange-500 border border-orange-500/20"><Clock className="w-5 h-5" /></div>
               <div><p className="text-xs text-slate-400">SLA Breach</p><p className="text-xl font-bold text-white">{stats.overall?.slaBreached || 0}</p></div>
             </div>
-            <div className="bg-coc-card p-3 rounded-xl border border-coc-border flex items-center gap-3">
+            <div className="bg-slate-900/60 backdrop-blur-xl p-3 rounded-xl border border-coc-border flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <div className="p-2.5 bg-purple-500/10 rounded-lg text-purple-500 border border-purple-500/20"><Users className="w-5 h-5" /></div>
               <div><p className="text-xs text-slate-400">Teams</p><p className="text-xl font-bold text-white">{teams.filter(t => t.status !== 'offline').length}</p></div>
             </div>
           </div>
 
-          <div className="flex-1 bg-slate-900 rounded-xl border border-coc-border overflow-hidden relative isolate">
+          <div className="flex-1 bg-slate-900/60 backdrop-blur-xl rounded-xl border border-coc-border overflow-hidden relative isolate shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
             <MapContainer center={VIZAG_CENTER} zoom={12} style={{ height: '100%', width: '100%' }} className="z-0" ref={mapRef}>
               <MapUpdater center={detailData?.location?.coordinates ? [detailData.location.coordinates[1], detailData.location.coordinates[0]] : null} />
               <LayersControl position="topright">
-                <BaseLayer checked name="Street View (Bright Labels)">
-                  <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
-                </BaseLayer>
-                <BaseLayer name="Dark Mode">
+                <BaseLayer checked name="Dark Mode">
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
                 </BaseLayer>
+                <BaseLayer name="Street View">
+                  <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
+                </BaseLayer>
                 <BaseLayer name="Satellite view">
-                  <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" attribution="Tiles &copy; Esri" />
+                  <LayerGroup>
+                    <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" attribution="Tiles &copy; Esri" />
+                    <TileLayer url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.png" attribution="Map tiles by Stamen Design" />
+                  </LayerGroup>
                 </BaseLayer>
               </LayersControl>
               

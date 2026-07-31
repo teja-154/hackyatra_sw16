@@ -2,6 +2,9 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 require('dotenv').config();
 
+// CRITICAL: Always use the test DB — NEVER the demo DB
+const TEST_MONGO_URI = process.env.MONGODB_TEST_URI || process.env.MONGODB_URI;
+
 test.describe.serial('COC-Sync Core Verification Pass', () => {
   const testPhone = '9998887776';
   const testWard = 'Ward 18 - Maddilapalem';
@@ -178,7 +181,7 @@ test.describe.serial('COC-Sync Core Verification Pass', () => {
 
     // Verify exactly one signal in DB for this idempotency key
     const { MongoClient } = require('mongodb');
-    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cocsync');
+    const client = new MongoClient(TEST_MONGO_URI);
     await client.connect();
     const db = client.db();
     const signalCount = await db.collection('signals').countDocuments({ idempotencyKey });
@@ -203,7 +206,7 @@ test.describe.serial('COC-Sync Core Verification Pass', () => {
 
     // Fetch initial score from DB
     const { MongoClient, ObjectId } = require('mongodb');
-    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cocsync');
+    const client = new MongoClient(TEST_MONGO_URI);
     await client.connect();
     const db = client.db();
     let initialIncident = await db.collection('incidents').findOne({ _id: new ObjectId(newIncidentId) });
