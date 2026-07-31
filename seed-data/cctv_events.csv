@@ -1,0 +1,11 @@
+description,category,ward,urgency,lat,lon,camera_id,event_type
+"Vehicle slowdown detected near pothole cluster",pothole,"Ward 12 - Dwaraka Nagar",medium,17.7252,83.2978,CAM-012-A,vehicle_slowdown
+"Crowd gathering detected near garbage dump",garbage,"Ward 5 - MVP Colony",low,17.7365,83.3185,CAM-005-B,crowd_gathering
+"Waterlogging detected at road junction",water,"Ward 8 - Seethammadhara",high,17.7432,83.3050,CAM-008-A,waterlogging
+"Road obstruction detected by debris",road,"Ward 18 - Maddilapalem",medium,17.7512,83.3200,CAM-018-A,road_obstruction
+"Vehicle slowdown near school zone",pothole,"Ward 12 - Dwaraka Nagar",high,17.7258,83.2965,CAM-012-B,vehicle_slowdown
+"Crowd gathering at water pipe burst site",water,"Ward 22 - Akkayyapalem",high,17.7392,83.3088,CAM-022-A,crowd_gathering
+"Waterlogging detected on main road",water,"Ward 1 - Gajuwaka",medium,17.7222,83.2142,CAM-001-A,waterlogging
+"Unusual crowd near exposed wires",electrical,"Ward 8 - Seethammadhara",critical,17.7442,83.3045,CAM-008-B,crowd_gathering
+"Vehicle slowdown near road cave-in",pothole,"Ward 35 - Simhachalam",high,17.7682,83.2582,CAM-035-A,vehicle_slowdown
+"Road obstruction from fallen tree",road,"Ward 18 - Maddilapalem",medium,17.7518,83.3208,CAM-018-B,road_obstruction

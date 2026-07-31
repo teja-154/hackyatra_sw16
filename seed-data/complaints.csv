@@ -1,0 +1,31 @@
+description,category,ward,urgency,lat,lon,phone,source
+"Large pothole near bus stop causing accidents",pothole,"Ward 12 - Dwaraka Nagar",high,17.7248,83.2975,9876543210,citizen
+"Garbage dump overflowing on main road",garbage,"Ward 5 - MVP Colony",medium,17.7370,83.3190,9876543211,citizen
+"Water pipe burst flooding street",water,"Ward 8 - Seethammadhara",critical,17.7435,83.3055,9876543212,citizen
+"Broken streetlight near school entrance",electrical,"Ward 12 - Dwaraka Nagar",high,17.7255,83.2960,9876543213,citizen
+"Pothole cluster on bypass road",pothole,"Ward 1 - Gajuwaka",medium,17.7225,83.2145,9876543214,citizen
+"Sewage overflow in residential area",water,"Ward 22 - Akkayyapalem",high,17.7388,83.3085,9876543215,citizen
+"Fallen tree blocking lane",road,"Ward 18 - Maddilapalem",medium,17.7515,83.3205,9876543216,citizen
+"Garbage not collected for 3 days",garbage,"Ward 30 - Pendurthi",low,17.7835,83.2055,9876543217,citizen
+"Road cave-in after heavy rain",pothole,"Ward 35 - Simhachalam",critical,17.7685,83.2585,9876543218,citizen
+"Waterlogging at junction",water,"Ward 5 - MVP Colony",high,17.7360,83.3180,9876543219,citizen
+"Illegal dump site near hospital",garbage,"Ward 12 - Dwaraka Nagar",high,17.7242,83.2990,9876543220,citizen
+"Exposed wires on electric pole",electrical,"Ward 8 - Seethammadhara",critical,17.7440,83.3048,9876543221,citizen
+"Deep pothole near main junction",pothole,"Ward 22 - Akkayyapalem",high,17.7380,83.3078,9876543222,citizen
+"Drainage block causing flooding",water,"Ward 1 - Gajuwaka",medium,17.7218,83.2138,9876543223,citizen
+"Construction debris on road",road,"Ward 18 - Maddilapalem",low,17.7508,83.3198,9876543224,citizen
+"Waste bins overflowing near market",garbage,"Ward 35 - Simhachalam",medium,17.7675,83.2578,9876543225,citizen
+"Street light flickering dangerously",electrical,"Ward 30 - Pendurthi",medium,17.7828,83.2048,9876543226,citizen
+"Pothole on school route",pothole,"Ward 12 - Dwaraka Nagar",high,17.7260,83.2968,9876543227,citizen
+"Open manhole cover missing",water,"Ward 5 - MVP Colony",critical,17.7372,83.3186,9876543228,citizen
+"Garbage burning in open area",garbage,"Ward 8 - Seethammadhara",medium,17.7428,83.3060,9876543229,citizen
+"Road erosion near bridge",road,"Ward 22 - Akkayyapalem",high,17.7390,83.3090,9876543230,citizen
+"Dead animal on road not cleared",garbage,"Ward 1 - Gajuwaka",low,17.7230,83.2150,9876543231,citizen
+"Leaking fire hydrant",water,"Ward 18 - Maddilapalem",medium,17.7520,83.3210,9876543232,citizen
+"Multiple potholes on stretch",pothole,"Ward 30 - Pendurthi",medium,17.7840,83.2060,9876543233,citizen
+"Transformer sparking",electrical,"Ward 35 - Simhachalam",critical,17.7690,83.2590,9876543234,citizen
+"Road surface completely broken",pothole,"Ward 12 - Dwaraka Nagar",high,17.7250,83.2972,9876543235,citizen
+"Plastic waste clogging drain",garbage,"Ward 5 - MVP Colony",medium,17.7368,83.3188,9876543236,citizen
+"Water supply contaminated",water,"Ward 8 - Seethammadhara",critical,17.7438,83.3052,9876543237,citizen
+"Street light pole tilting",electrical,"Ward 22 - Akkayyapalem",high,17.7385,83.3082,9876543238,citizen
+"Pothole near hospital entrance",pothole,"Ward 12 - Dwaraka Nagar",critical,17.7240,83.2985,9876543239,citizen

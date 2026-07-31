@@ -1,0 +1,21 @@
+{
+  "wards": [
+    { "name": "Ward 1 - Gajuwaka", "center": [83.2141, 17.7220] },
+    { "name": "Ward 5 - MVP Colony", "center": [83.3184, 17.7365] },
+    { "name": "Ward 8 - Seethammadhara", "center": [83.3051, 17.7431] },
+    { "name": "Ward 12 - Dwaraka Nagar", "center": [83.2975, 17.7248] },
+    { "name": "Ward 18 - Maddilapalem", "center": [83.3202, 17.7510] },
+    { "name": "Ward 22 - Akkayyapalem", "center": [83.3081, 17.7383] },
+    { "name": "Ward 30 - Pendurthi", "center": [83.2050, 17.7830] },
+    { "name": "Ward 35 - Simhachalam", "center": [83.2580, 17.7680] }
+  ],
+  "sensitiveZones": [
+    { "name": "King George Hospital", "type": "hospital", "coordinates": [83.3049, 17.7176] },
+    { "name": "GITAM University", "type": "school", "coordinates": [83.3762, 17.7830] },
+    { "name": "Visakha Govt School", "type": "school", "coordinates": [83.2980, 17.7260] },
+    { "name": "NTR Municipal Hospital", "type": "hospital", "coordinates": [83.3165, 17.7390] },
+    { "name": "AU Engineering College", "type": "school", "coordinates": [83.3190, 17.7310] },
+    { "name": "GVMC Office", "type": "govt_building", "coordinates": [83.3010, 17.7200] },
+    { "name": "Collector Office", "type": "govt_building", "coordinates": [83.2970, 17.7150] }
+  ]
+}
