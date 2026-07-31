@@ -137,6 +137,24 @@ async function seed() {
       }
     }
 
+    console.log('🔗 Generating Data Silo Demo Scenarios...');
+    // Scenario A: The Multi-System Emergency
+    const sA1 = await Signal.create({ source: 'citizen', description: 'Huge accident and traffic jam', ward: 'Ward 18 - Maddilapalem', category: 'medical', urgency: 'critical', location: { type: 'Point', coordinates: [83.3195, 17.7335] }, phone: '9988776655', confidence: 0.9, departmentName: 'Health & Emergency' });
+    await correlateSignal(sA1);
+    
+    const sA2 = await Signal.create({ source: 'cctv', description: 'Traffic anomaly detected: severe congestion', ward: 'Ward 18 - Maddilapalem', category: 'medical', urgency: 'high', location: { type: 'Point', coordinates: [83.3196, 17.7336] }, confidence: 0.85, departmentName: 'Health & Emergency' });
+    await correlateSignal(sA2);
+    
+    const sA3 = await Signal.create({ source: 'traffic', description: 'Accident reported on highway, need ambulance', ward: 'Ward 18 - Maddilapalem', category: 'medical', urgency: 'critical', location: { type: 'Point', coordinates: [83.3194, 17.7334] }, confidence: 0.95, departmentName: 'Health & Emergency' });
+    await correlateSignal(sA3);
+
+    // Scenario B: Cross-Department Alert
+    const sB1 = await Signal.create({ source: 'field_team', description: 'Garbage truck broke down here, unable to clear bin', ward: 'Ward 8 - Seethammadhara', category: 'garbage', urgency: 'medium', location: { type: 'Point', coordinates: [83.3000, 17.7400] }, confidence: 0.9, departmentName: 'GVMC General' });
+    await correlateSignal(sB1);
+    
+    const sB2 = await Signal.create({ source: 'citizen', description: 'Garbage is piling up on the street, smells terrible', ward: 'Ward 8 - Seethammadhara', category: 'garbage', urgency: 'low', location: { type: 'Point', coordinates: [83.3001, 17.7401] }, phone: '8877665544', confidence: 0.8, departmentName: 'GVMC General' });
+    await correlateSignal(sB2);
+
     console.log('✅ Seeding complete!');
     process.exit(0);
   } catch (err) {

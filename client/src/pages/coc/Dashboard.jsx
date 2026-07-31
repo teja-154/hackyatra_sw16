@@ -194,6 +194,36 @@ export default function Dashboard() {
                   <div className="flex justify-between"><span className="text-slate-400">Sources</span><span className="text-white">{detailData.sources?.join(', ')}</span></div>
                 </div>
 
+                {/* Data Silo Bridge Badge */}
+                {detailData.sources?.length > 1 && (
+                  <div className="bg-brand-900/30 border border-brand-500/50 rounded-lg p-2 flex items-start gap-2 animate-pulse">
+                    <Activity className="w-4 h-4 text-brand-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-bold text-brand-300 uppercase">Data Silo Broken</p>
+                      <p className="text-[10px] text-brand-100">Merged from {detailData.sources.length} separate isolated systems.</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Simulated CCTV Feed */}
+                {detailData.sources?.includes('cctv') && (
+                  <div className="border-2 border-red-500/50 rounded-lg overflow-hidden relative aspect-video bg-black flex flex-col items-center justify-center">
+                    <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                      <span className="animate-pulse w-2 h-2 bg-red-500 rounded-full"></span>
+                      <span className="text-[10px] text-red-500 font-bold tracking-widest bg-black/50 px-1 rounded">LIVE CCTV</span>
+                    </div>
+                    <div className="absolute top-2 right-2 text-[10px] text-white font-mono bg-black/50 px-1 rounded z-10">{detailData.ward.split(' - ')[0]} CAM-04</div>
+                    <div className="w-full h-full opacity-40 bg-[url('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=400&q=80')] bg-cover bg-center mix-blend-luminosity"></div>
+                    <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.5) 2px, rgba(0,0,0,0.5) 4px)' }}></div>
+                    <div className="absolute text-center z-10">
+                      <div className="w-12 h-12 border-2 border-red-500/50 mx-auto rounded-full flex items-center justify-center mb-1">
+                        <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                      </div>
+                      <p className="text-[9px] text-red-400 font-mono tracking-widest uppercase bg-black/70 px-2 py-0.5 rounded">Anomaly Detected</p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Evidence Images */}
                 {detailData.signals?.filter(s => s.photoUrl).length > 0 && (
                   <div>
@@ -328,7 +358,10 @@ export default function Dashboard() {
           <div className="flex-1 bg-slate-900 rounded-xl border border-coc-border overflow-hidden relative isolate">
             <MapContainer center={VIZAG_CENTER} zoom={12} style={{ height: '100%', width: '100%' }} className="z-0" ref={mapRef}>
               <LayersControl position="topright">
-                <BaseLayer checked name="Dark Mode (Default)">
+                <BaseLayer checked name="Street View (Bright Labels)">
+                  <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
+                </BaseLayer>
+                <BaseLayer name="Dark Mode">
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
                 </BaseLayer>
                 <BaseLayer name="Satellite view">
