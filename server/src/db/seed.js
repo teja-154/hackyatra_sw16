@@ -88,25 +88,20 @@ async function seed() {
     }
     await FieldTeam.insertMany(teams);
 
-    // 5. Load Complaints & Correlate
-    console.log('🚨 Loading Complaints...');
-    const csvPath = path.join(__dirname, '../../../seed-data/complaints.csv');
-    const csvContent = fs.readFileSync(csvPath, 'utf-8');
-    const lines = csvContent.split('\n').filter(l => l.trim());
-    const headers = lines[0].split(',');
-    
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-      const row = {};
-      headers.forEach((h, idx) => {
-        let val = values[idx];
-        if (val) row[h.trim()] = val.replace(/^"|"$/g, '').trim();
-      });
-      
-      if (!row.category) continue;
-      
-      // Calculate a backdated time (between 0 and 48 hours ago)
-      const backdatedMs = Math.floor(Math.random() * 48 * 60 * 60 * 1000);
+    // 5. Load Curated Demo Complaints & Correlate
+    console.log('🚨 Loading Curated Demo Dataset...');
+    const curatedIncidents = [
+      { source: 'citizen', description: 'Streetlight is not working, completely dark street', ward: 'Ward 5 - MVP Colony', category: 'streetlight', urgency: 'medium', location: [83.3330, 17.7405], photoUrl: 'https://images.unsplash.com/photo-1542125586-7a7605e55dcb?w=400&q=80', phone: '9988776650', dept: 'Electrical' },
+      { source: 'citizen', description: 'Large pothole causing traffic slowdown', ward: 'Ward 12 - Dwaraka Nagar', category: 'pothole', urgency: 'high', location: [83.3080, 17.7280], photoUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400&q=80', phone: '9988776651', dept: 'GVMC General' },
+      { source: 'field_team', description: 'Transformer sparking dangerously', ward: 'Ward 18 - Maddilapalem', category: 'electricity', urgency: 'critical', location: [83.3220, 17.7340], photoUrl: 'https://images.unsplash.com/photo-1621252179027-94459d278660?w=400&q=80', phone: '9988776652', dept: 'Electrical' },
+      { source: 'citizen', description: 'Water pipe burst, flooding street', ward: 'Ward 1 - Bheemili', category: 'water', urgency: 'high', location: [83.4480, 17.8900], photoUrl: 'https://images.unsplash.com/photo-1563299796-189f30be0fbb?w=400&q=80', phone: '9988776653', dept: 'GVMC General' },
+      { source: 'citizen', description: 'Suspicious gathering near the park', ward: 'Ward 22 - Akkayyapalem', category: 'crime', urgency: 'high', location: [83.3030, 17.7300], photoUrl: 'https://images.unsplash.com/photo-1598282386345-09d57a949666?w=400&q=80', phone: '9988776654', dept: 'Police/Security' },
+      { source: 'citizen', description: 'Massive garbage pile uncollected for 3 days', ward: 'Ward 30 - Siripuram', category: 'garbage', urgency: 'medium', location: [83.3200, 17.7200], photoUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&q=80', phone: '9988776656', dept: 'GVMC General' },
+      { source: 'cctv', description: 'Stray dog pack aggressive towards pedestrians', ward: 'Ward 35 - Gajuwaka', category: 'animal', urgency: 'high', location: [83.2180, 17.6900], photoUrl: 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&q=80', phone: '9988776657', dept: 'Health & Emergency' }
+    ];
+
+    for (const row of curatedIncidents) {
+      const backdatedMs = Math.floor(Math.random() * 24 * 60 * 60 * 1000); // within last 24 hours
       const createdAt = new Date(Date.now() - backdatedMs);
 
       const signal = await Signal.create({
@@ -115,23 +110,20 @@ async function seed() {
         ward: row.ward,
         category: row.category,
         urgency: row.urgency,
+        photoUrl: row.photoUrl,
         location: {
           type: 'Point',
-          coordinates: [parseFloat(row.lon), parseFloat(row.lat)],
+          coordinates: row.location,
         },
         phone: row.phone,
-        confidence: 0.9,
+        confidence: 0.95,
       });
 
-      // Hack the createdAt manually in MongoDB
       await Signal.updateOne({ _id: signal._id }, { $set: { createdAt, updatedAt: createdAt } });
-
-      signal.departmentName = CATEGORY_DEPT_MAP[row.category] || 'GVMC General';
+      signal.departmentName = row.dept;
       
       const incident = await correlateSignal(signal);
       
-      // Hack the incident createdAt manually to match the signal's age
-      // Only do this if it's the first signal, otherwise the engine updated it
       if (incident.sourceCount === 1) {
         await Incident.updateOne({ _id: incident._id }, { $set: { createdAt, updatedAt: createdAt } });
       }

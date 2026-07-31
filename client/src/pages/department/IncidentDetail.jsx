@@ -186,23 +186,12 @@ export default function IncidentDetail() {
           <div className="max-w-3xl mx-auto">
             {incident.status === 'reported' && (
               <button 
-                onClick={() => handleAction('acknowledge')}
-                disabled={actionLoading}
-                className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {actionLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-                Acknowledge Alert
-              </button>
-            )}
-            
-            {incident.status === 'acknowledged' && (
-              <button 
                 onClick={() => handleAction('accept')}
                 disabled={actionLoading}
                 className="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
               >
                 {actionLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
-                Accept & Assign Team
+                Assign Team
               </button>
             )}
 

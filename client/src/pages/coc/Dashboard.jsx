@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Marker, Popup, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Marker, Popup, LayersControl, useMap } from 'react-leaflet';
 const { BaseLayer } = LayersControl;
 import L from 'leaflet';
 import { api } from '../../api/client.js';
@@ -37,6 +37,16 @@ const STATUS_LABELS = {
   in_progress: 'In Progress', resolved_verified: 'Resolved', disputed: 'Disputed',
   signal_merged: 'Report Merged', sla_breached: 'SLA Breached', rerouted: 'Rerouted',
 };
+
+function MapUpdater({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, 18, { duration: 1.5 });
+    }
+  }, [center, map]);
+  return null;
+}
 
 export default function Dashboard() {
   const [incidents, setIncidents] = useState([]);
@@ -228,11 +238,13 @@ export default function Dashboard() {
                 {detailData.signals?.filter(s => s.photoUrl).length > 0 && (
                   <div>
                     <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Evidence Photos</h4>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-3">
                       {detailData.signals.filter(s => s.photoUrl).map((s, i) => (
-                        <div key={i} className="relative rounded-lg overflow-hidden border border-slate-700 aspect-square">
-                          <img src={s.photoUrl} alt="Evidence" className="w-full h-full object-cover" />
-                          <div className="absolute bottom-0 inset-x-0 bg-black/70 text-[10px] text-white p-1 truncate">{s.source} • {formatTime(s.createdAt)}</div>
+                        <div key={i} className="relative rounded-xl overflow-hidden border-2 border-slate-700 shadow-lg">
+                          <img src={s.photoUrl} alt="Evidence" className="w-full h-48 object-cover" />
+                          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-2 pt-6">
+                            <p className="text-[11px] font-medium text-white truncate">{s.source} • {formatTime(s.createdAt)}</p>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -357,6 +369,7 @@ export default function Dashboard() {
 
           <div className="flex-1 bg-slate-900 rounded-xl border border-coc-border overflow-hidden relative isolate">
             <MapContainer center={VIZAG_CENTER} zoom={12} style={{ height: '100%', width: '100%' }} className="z-0" ref={mapRef}>
+              <MapUpdater center={detailData?.location?.coordinates ? [detailData.location.coordinates[1], detailData.location.coordinates[0]] : null} />
               <LayersControl position="topright">
                 <BaseLayer checked name="Street View (Bright Labels)">
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" attribution='&copy; OpenStreetMap &copy; CARTO' />
