@@ -15,6 +15,9 @@ const CATEGORY_DEPT_MAP = {
   medical:    'Health & Emergency',
   crime:      'Police/Security',
   security:   'Police/Security',
+  streetlight:'Electrical',
+  electricity:'Electrical',
+  animal:     'Health & Emergency',
 };
 
 const VALID_CATEGORIES = ['pothole', 'road', 'garbage', 'waste', 'water', 'drainage', 'electrical', 'medical', 'crime', 'security'];

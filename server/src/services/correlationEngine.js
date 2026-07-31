@@ -5,6 +5,7 @@ import Department from '../models/Department.js';
 import { calculatePriority } from './priorityScorer.js';
 import { emitIncidentUpdate } from './socketManager.js';
 import { assignNearestTeam } from './teamAssigner.js';
+import { CATEGORY_DEPT_MAP } from './aiClassifier.js';
 
 /**
  * Correlation Engine — the core innovation.
@@ -54,8 +55,9 @@ export async function correlateSignal(signal) {
       await incident.save({ session });
     } else {
       // 3. CREATE new incident
+      const targetDeptName = CATEGORY_DEPT_MAP[signal.category] || signal.departmentName || 'GVMC General';
       const dept = await Department.findOne({
-        name: signal.departmentName || 'GVMC General',
+        name: targetDeptName,
       }).session(session);
 
       incident = new Incident({
