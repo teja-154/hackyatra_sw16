@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, LayersControl, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 const { BaseLayer } = LayersControl;
 import L from 'leaflet';
 import { api } from '../../api/client.js';
@@ -382,6 +383,12 @@ export default function Dashboard() {
                 </BaseLayer>
               </LayersControl>
               
+              <MarkerClusterGroup
+                chunkedLoading
+                maxClusterRadius={50}
+                spiderfyOnMaxZoom
+                showCoverageOnHover={false}
+              >
               {visibleIncidents.map(inc => {
                 const pv = getPriorityVisuals(inc.priorityScore, inc.urgency);
                 const isResolved = inc.status === 'resolved_verified';
@@ -411,6 +418,7 @@ export default function Dashboard() {
                   </CircleMarker>
                 );
               })}
+              </MarkerClusterGroup>
               {teams.filter(t => t.location?.coordinates && t.status !== 'offline').map(team => (
                 <Marker key={team._id} position={[team.location.coordinates[1], team.location.coordinates[0]]} icon={teamIcon} zIndexOffset={1000}>
                   <Popup><div className="p-1"><h4 className="font-bold text-sm">{team.name}</h4><p className="text-xs text-gray-600">{team.department?.name}</p><span className={`text-[10px] px-1 py-0.5 rounded uppercase font-bold ${team.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>{team.status}</span></div></Popup>

@@ -6,7 +6,7 @@ import config from './config/env.js';
 import { connectDB } from './config/db.js';
 import './config/cloudinary.js';
 import { setupSocketManager } from './services/socketManager.js';
-import { startSLAChecker } from './services/slaChecker.js';
+import { startSLAChecker, checkSLA } from './services/slaChecker.js';
 import { startCCTVSimulator } from './services/cctvSimulator.js';
 
 /* ── Routes ──────────────────────────────────────────── */
@@ -46,6 +46,14 @@ app.use('/api/upload',     uploadRouter);
 app.use('/api/teams',      teamsRouter);
 app.use('/api/sensors',    sensorsRouter);
 app.use('/api/stats',      statsRouter);
+
+/* ── Test-only routes (never mounted in production) ─────── */
+if (process.env.NODE_ENV === 'test') {
+  app.post('/api/test/sla-check', async (req, res) => {
+    await checkSLA();
+    res.json({ success: true });
+  });
+}
 
 /* ── Health check ────────────────────────────────────── */
 app.get('/api/health', (_req, res) => {

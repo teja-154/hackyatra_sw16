@@ -66,6 +66,31 @@ export default function ReportForm() {
     );
   };
 
+  const getDemoLocation = () => {
+    if (!formData.ward) {
+      setError('Please select a ward first to get a realistic demo location.');
+      return;
+    }
+    // Hardcoded Vizag ward centers for presentation
+    const demoCoords = {
+      'Ward 1 - Gajuwaka': { lat: 17.6900, lon: 83.2180 },
+      'Ward 5 - MVP Colony': { lat: 17.7405, lon: 83.3330 },
+      'Ward 8 - Seethammadhara': { lat: 17.7450, lon: 83.3150 },
+      'Ward 12 - Dwaraka Nagar': { lat: 17.7280, lon: 83.3080 },
+      'Ward 18 - Maddilapalem': { lat: 17.7340, lon: 83.3220 },
+      'Ward 22 - Akkayyapalem': { lat: 17.7300, lon: 83.3030 },
+      'Ward 30 - Pendurthi': { lat: 17.8200, lon: 83.2000 },
+      'Ward 35 - Simhachalam': { lat: 17.7667, lon: 83.2500 }
+    };
+    const coords = demoCoords[formData.ward] || { lat: 17.6868, lon: 83.2185 }; // Fallback to Vizag center
+    setFormData(prev => ({
+      ...prev,
+      lat: coords.lat,
+      lon: coords.lon,
+    }));
+    setError(null);
+  };
+
   // Phone validation — only allow digits, max 10
   const handlePhoneChange = (e) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -239,27 +264,6 @@ export default function ReportForm() {
             )}
           </div>
 
-          {/* Location */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Location *</label>
-            {formData.lat ? (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">Location captured</span>
-              </div>
-            ) : (
-              <button 
-                type="button" 
-                onClick={getLocation}
-                disabled={locating}
-                className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-slate-700 font-medium hover:border-slate-300 hover:bg-slate-50 transition-colors disabled:opacity-50"
-              >
-                {locating ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
-                {locating ? 'Finding location...' : 'Get GPS Location'}
-              </button>
-            )}
-          </div>
-
           {/* Ward */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Ward *</label>
@@ -272,6 +276,40 @@ export default function ReportForm() {
               <option value="">Select your ward</option>
               {WARDS.map(w => <option key={w} value={w}>{w}</option>)}
             </select>
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Location *</label>
+            {formData.lat ? (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                <span className="text-sm font-medium">Location captured</span>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <button 
+                  type="button" 
+                  onClick={getLocation}
+                  disabled={locating}
+                  className="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-slate-700 font-medium hover:border-slate-300 hover:bg-slate-50 transition-colors disabled:opacity-50"
+                  title="Real GPS for genuine reports"
+                >
+                  {locating ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
+                  {locating ? 'Finding...' : 'Get GPS Location'}
+                </button>
+                <button 
+                  type="button" 
+                  onClick={getDemoLocation}
+                  disabled={locating}
+                  className="flex-1 border-2 border-brand-200 bg-brand-50 rounded-xl px-4 py-3 flex items-center justify-center gap-2 text-brand-700 font-medium hover:border-brand-300 hover:bg-brand-100 transition-colors disabled:opacity-50"
+                  title="Mocks GPS to match selected ward for presentations"
+                >
+                  <MapPin className="w-5 h-5" />
+                  Use Demo Location
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Description */}

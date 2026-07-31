@@ -49,7 +49,7 @@ router.post('/', complaintsLimiter, async (req, res) => {
     if (idempotency_key) {
       const existing = await Signal.findOne({ idempotencyKey: idempotency_key }).populate('incident');
       if (existing) {
-        return res.status(201).json({
+        return res.status(200).json({
           id: existing.incident?._id || existing._id,
           signal_id: existing._id,
           status: existing.incident?.status || 'reported',
@@ -102,6 +102,28 @@ router.post('/', complaintsLimiter, async (req, res) => {
       assigned_team: incident.assignedTeam?.name || null,
     });
   } catch (err) {
+    if (err.code === 11000 && err.keyPattern && err.keyPattern.idempotencyKey) {
+      // Race condition: poll for the winning thread to finish correlating (max 5 × 200ms = 1s)
+      let existing = null;
+      const MAX_RETRIES = 5;
+      for (let i = 0; i < MAX_RETRIES; i++) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        existing = await Signal.findOne({ idempotencyKey: req.body.idempotency_key }).populate('incident');
+        if (existing && existing.incident) break;
+      }
+      if (!existing || !existing.incident) {
+        return res.status(500).json({ error: 'Duplicate submission detected but incident not yet ready — please retry in a moment.' });
+      }
+      return res.status(200).json({
+        id: existing.incident._id,
+        signal_id: existing._id,
+        status: existing.incident.status || 'reported',
+        category: existing.category,
+        department: existing.incident.department || 'GVMC General',
+        urgency: existing.incident.urgency || 'medium',
+        duplicate: true,
+      });
+    }
     console.error('Complaint error:', err.message);
     res.status(500).json({ error: 'Failed to process complaint' });
   }

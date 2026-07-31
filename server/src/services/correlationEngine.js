@@ -21,9 +21,14 @@ export async function correlateSignal(signal) {
   session.startTransaction();
 
   try {
-    // 1. Search for matching open incident: SAME WARD + SAME CATEGORY
+    // 1. Search for matching open incident: WITHIN 300m + SAME CATEGORY
     const existingIncident = await Incident.findOne({
-      ward: signal.ward,                               // ← MUST be same ward
+      location: {
+        $near: {
+          $geometry: { type: 'Point', coordinates: signal.location.coordinates },
+          $maxDistance: 300
+        }
+      },
       category: signal.category,
       status: { $nin: ['resolved_verified', 'disputed'] },
     }).session(session);
